@@ -16,6 +16,26 @@ from dotenv import load_dotenv
 from sqlalchemy import Date
 from datetime import datetime
 import uuid
+import logging
+import json_log_formatter
+from flask import Flask, request, jsonify, url_for, send_from_directory, session
+
+class CustomJSONFormatter(json_log_formatter.JSONFormatter):
+    def json_record(self, message, extra, record):
+        extra['message'] = message
+        if 'user_id' in session:
+            extra['session_user_id'] = session['user_id']
+        return extra
+
+# Configure your Flask app to use this logger
+formatter = CustomJSONFormatter()
+
+json_handler = logging.StreamHandler()
+json_handler.setFormatter(formatter)
+
+logger = logging.getLogger('my_json')
+logger.addHandler(json_handler)
+logger.setLevel(logging.INFO)
 
 
 app = Flask(__name__)
@@ -121,12 +141,12 @@ def login_required(f):
     
 @app.route('/check-auth', methods=['GET'])
 def check_auth():
-    print(f"Checking authentication status for current_user: {current_user}")
+    logger.info(f"Checking authentication status for current_user: {current_user}")
     if current_user.is_authenticated:
-        print(f"User {current_user.username} is authenticated")
+        logger.info(f"User {current_user.username} is authenticated")
         return jsonify({'message': 'Authenticated'})
     else:
-        print("User not authenticated")
+        logger.warning("User not authenticated")
         return jsonify({'error': 'Not authenticated'}), 401
 
 
@@ -194,9 +214,9 @@ def register_user():
 
 @login_manager.user_loader
 def load_user(user_id):
-    print(f"user_loader called with user_id: {user_id}")
+    logger.info(f"user_loader called with user_id: {user_id}")
     user = User.query.get(int(user_id))
-    print(f"Loaded user: {user}")
+    logger.info(f"Loaded user: {user}")
     return user
 
 
@@ -211,11 +231,12 @@ def login():
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
         login_user(user)
         session['user_id'] = user.id
-        print(f"User {username} logged in successfully with session ID: {session.get('user_id')}")
+        logger.info(f"User {username} logged in successfully with session ID: {session.get('user_id')}")
         return jsonify({'message': 'Login successful', 'sessionID': user.id}), 200
     else:
-        print(f"Failed login attempt for username: {username}")
+        logger.warning(f"Failed login attempt for username: {username}")
         return jsonify({'error': 'Invalid username or password'}), 401
+    
 
 
 @app.route('/logout', methods=['POST'])
