@@ -1,0 +1,10 @@
+services:
+  - name: nginx
+    buildCommand: ignore
+    runCommand: ["nginx", "-g", "daemon off;"]
+    env:
+      - key: NGINX_HTTP_PORT
+        value: "80"
+      - key: NGINX_CONF_PATH
+        value: "/etc/nginx/conf.d/nginx.conf"
+    healthCheckPath: /
