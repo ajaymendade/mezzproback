@@ -142,10 +142,25 @@ def login_required(f):
 @app.route('/check-auth', methods=['GET'])
 def check_auth():
     logger.info(f"Checking authentication status for current_user: {current_user}")
+
+    # Check if current_user is authenticated
     if current_user.is_authenticated:
-        logger.info(f"User {current_user.username} is authenticated")
-        return jsonify({'message': 'Authenticated'})
+        # Fetch the latest user data from the database
+        user = User.query.get(current_user.id)
+        if user:
+            # User is authenticated and found in the database
+            logger.info(f"User {user.username} is authenticated and found in the database")
+            return jsonify({
+                'message': 'Authenticated',
+                'username': user.username,
+                'email': user.email
+            })
+        else:
+            # User is authenticated but not found in the database
+            logger.warning(f"User {current_user.username} is authenticated but not found in the database")
+            return jsonify({'error': 'User not found in database'}), 404
     else:
+        # User is not authenticated
         logger.warning("User not authenticated")
         return jsonify({'error': 'Not authenticated'}), 401
 
