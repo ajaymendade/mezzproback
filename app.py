@@ -121,10 +121,14 @@ def login_required(f):
     
 @app.route('/check-auth', methods=['GET'])
 def check_auth():
+    print(f"Checking authentication status for current_user: {current_user}")
     if current_user.is_authenticated:
+        print(f"User {current_user.username} is authenticated")
         return jsonify({'message': 'Authenticated'})
     else:
+        print("User not authenticated")
         return jsonify({'error': 'Not authenticated'}), 401
+
 
 @app.route('/register', methods=['POST'])
 def register_user():
@@ -190,7 +194,11 @@ def register_user():
 
 @login_manager.user_loader
 def load_user(user_id):
-    return db.session.get(User, int(user_id))
+    print(f"user_loader called with user_id: {user_id}")
+    user = User.query.get(int(user_id))
+    print(f"Loaded user: {user}")
+    return user
+
 
 
 @app.route('/login', methods=['POST'])
@@ -203,9 +211,12 @@ def login():
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
         login_user(user)
         session['user_id'] = user.id
+        print(f"User {username} logged in successfully with session ID: {session.get('user_id')}")
         return jsonify({'message': 'Login successful', 'sessionID': user.id}), 200
     else:
+        print(f"Failed login attempt for username: {username}")
         return jsonify({'error': 'Invalid username or password'}), 401
+
 
 @app.route('/logout', methods=['POST'])
 def logout():
