@@ -270,9 +270,9 @@ def logout():
 
 
 
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return User.query.get(int(session.get('user_id')))
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(session.get('user_id')))
 
 
 # ============Dashboard part===============
@@ -288,9 +288,11 @@ def dashboard():
 @app.route('/profile', methods=['GET'])
 @login_required
 def profile():
-    user = current_user
-
-    profile_data = {
+    user_id = session.get('user_id')
+    if user_id:
+        user = User.query.get(user_id)
+        if user:
+            profile_data = {
         'sessionID': user.id,
         'username': user.username,
         'first_name': user.first_name,
@@ -306,8 +308,8 @@ def profile():
         'tin': user.tin,
         'pan_number': user.pan_number,
         'metamask_address': user.metamask_address
-    }
 
+            }
     return jsonify(profile_data), 200
 
     '''elif request.method == 'PUT':
