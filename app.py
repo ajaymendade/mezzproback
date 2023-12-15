@@ -244,7 +244,7 @@ def login():
 
     user = User.query.filter_by(username=username).first()
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
-        login_user(user, remember=True)
+        login_user(user)
         session['user_id'] = user.id
         logger.info(f"User {username} logged in successfully with session ID: {session.get('user_id')}")
         return jsonify({'message': 'Login successful', 'sessionID': user.id}), 200
@@ -262,9 +262,9 @@ def logout():
 
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(session.get('user_id')))
+# @login_manager.user_loader
+# def load_user(user_id):
+#     return User.query.get(int(session.get('user_id')))
 
 
 # ============Dashboard part===============
