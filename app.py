@@ -46,6 +46,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://shreeya:GTKvyyIQBPdE2lWnD8
 load_dotenv()
 app.config['UPLOAD_FOLDER'] = 'pdfs'
 db = SQLAlchemy(app)
+app.secret_key = os.environ.get("6de23aa303c89bb1ab31a42a39b419ba3ce26cae8821cfa7c060878c63b827b1")
 
 # Direct Redis Configuration for Testing
 # Session configuration for Redis
