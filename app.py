@@ -46,7 +46,7 @@ app.config['UPLOAD_FOLDER'] = 'pdfs'
 db = SQLAlchemy(app)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"  # You can choose other session backends, e.g., "redis"
-app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_SECURE'] = False
 Session(app)
 
 
@@ -244,7 +244,7 @@ def login():
 
     user = User.query.filter_by(username=username).first()
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
-        login_user(user)
+        login_user(user, remember=True)
         session['user_id'] = user.id
         logger.info(f"User {username} logged in successfully with session ID: {session.get('user_id')}")
         return jsonify({'message': 'Login successful', 'sessionID': user.id}), 200
