@@ -21,15 +21,6 @@ import json_log_formatter
 from flask import Flask, request, jsonify, url_for, send_from_directory, session
 import redis
 
-redis_host = os.environ.get('REDIS_HOST')
-redis_port = os.environ.get('REDIS_PORT')
-redis_password = os.environ.get('REDIS_PASSWORD')
-
-r = redis.Redis(
-  host=redis_host,
-  port=redis_port,
-  password=redis_password
-)
 
 class CustomJSONFormatter(json_log_formatter.JSONFormatter):
     def json_record(self, message, extra, record):
@@ -56,17 +47,13 @@ load_dotenv()
 app.config['UPLOAD_FOLDER'] = 'pdfs'
 db = SQLAlchemy(app)
 
-# Session configuration
+# Direct Redis Configuration for Testing
+# Session configuration for Redis
 app.config["SESSION_TYPE"] = "redis"
-app.config["SESSION_REDIS"] = redis.from_url(os.environ.get("REDIS_URL"))  # Use environment variable for Redis URL
+app.config["SESSION_REDIS"] = redis.from_url('redis://:tEzmjbcyLdnJ4yc9OYS2iG7GcqI1m9gB@redis-16721.c322.us-east-1-2.ec2.cloud.redislabs.com:16721')
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_USE_SIGNER"] = True
 Session(app)
-
-# REDIS_HOST=redis-16721.c322.us-east-1-2.ec2.cloud.redislabs.com
-# REDIS_PORT=16721
-# REDIS_PASSWORD=tEzmjbcyLdnJ4yc9OYS2iG7GcqI1m9gB
-# REDIS_URL=redis://:tEzmjbcyLdnJ4yc9OYS2iG7GcqI1m9gB@redis-16721.c322.us-east-1-2.ec2.cloud.redislabs.com:16721
 
 
 
