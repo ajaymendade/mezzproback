@@ -46,7 +46,7 @@ app.config['UPLOAD_FOLDER'] = 'pdfs'
 db = SQLAlchemy(app)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"  # You can choose other session backends, e.g., "redis"
-app.config['SESSION_COOKIE_SECURE'] = False
+app.config['SESSION_COOKIE_SECURE'] = True
 Session(app)
 
 
