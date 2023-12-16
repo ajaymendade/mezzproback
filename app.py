@@ -149,12 +149,12 @@ def login_required(f):
     
 @app.route('/check-auth', methods=['GET'])
 def check_auth():
-    logger.info(f"Checking authentication status for current_user: {current_user}")
+    # Check if user_id is in session
+    user_id = session.get('user_id')
 
-    # Check if current_user is authenticated
-    if current_user.is_authenticated:
-        # Fetch the latest user data from the database
-        user = User.query.get(current_user.id)
+    if user_id:
+        # Fetch user from the database
+        user = User.query.get(user_id)
         if user:
             # User is authenticated and found in the database
             logger.info(f"User {user.username} is authenticated and found in the database")
@@ -162,15 +162,16 @@ def check_auth():
                 'message': 'Authenticated',
                 'username': user.username,
                 'email': user.email
-            })
+            }), 200
         else:
-            # User is authenticated but not found in the database
-            logger.warning(f"User {current_user.username} is authenticated but not found in the database")
+            # User ID in session but no corresponding user in the database
+            logger.warning(f"User ID {user_id} found in session but no corresponding user in the database")
             return jsonify({'error': 'User not found in database'}), 404
     else:
         # User is not authenticated
         logger.warning("User not authenticated")
         return jsonify({'error': 'Not authenticated'}), 401
+
 
 
 @app.route('/register', methods=['POST'])
