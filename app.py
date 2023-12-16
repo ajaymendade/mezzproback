@@ -151,6 +151,7 @@ def login_required(f):
 def check_auth():
     # Check if user_id is in session
     user_id = session.get('user_id')
+    logger.info(f"Session User ID: {user_id}")
 
     if user_id:
         # Fetch user from the database
@@ -254,7 +255,9 @@ def login():
     user = User.query.filter_by(username=username).first()
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
         login_user(user)
+        
         session['user_id'] = user.id
+        logger.info(f"Login: Session User ID set to {session.get('user_id')}")
         logger.info(f"User {username} logged in successfully with session ID: {session.get('user_id')}")
         return jsonify({'message': 'Login successful', 'sessionID': user.id}), 200
     else:
@@ -267,6 +270,7 @@ def login():
 def logout():
     session.pop('user_id', None)
     logout_user()
+    logger.info(f"Logout: Session User ID after logout {session.get('user_id')}")
     return jsonify({'message': 'Logged out successfully'}), 200
 
 
