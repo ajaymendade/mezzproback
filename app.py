@@ -159,21 +159,9 @@ def login_required(f):
 def check_auth():
     # Check if the session contains a user_id
     user_id = session.get('user_id')
-    logger.info(f"Session ID set to {session.get('user_id')}")
     logger.info(f"Session User ID: {user_id}")
 
-    test_value = session.get('test_key')
-    logger.info(f"Test Key Value: {test_value}")
-
-    logger.info(f"Entire Session Data: {session}")
-
-
     if user_id:
-        # User is authenticated
-        logger.info(f"User with session ID {user_id} is authenticated")
-
-        # You can access other session data if needed
-        # Example: username stored in the session
         username = session.get('username')
 
         return jsonify({
@@ -182,8 +170,6 @@ def check_auth():
             'username': username  # Include any other session data you need
         }), 200
     else:
-        # User is not authenticated
-        logger.warning("User not authenticated")
         return jsonify({'error': 'Not authenticated'}), 401
 
 
@@ -272,17 +258,13 @@ def login():
         if user.id is not None:
             session['user_id'] = user.id
             session['username'] = user.username  # Set the username in the session
-            logger.info(f"Login: Session User ID set to {session.get('user_id')}")
             logger.info(f"User {username} logged in successfully with session ID: {session.get('user_id')}")
 
-            session['test_key'] = 'test_value'
 
             return jsonify({'message': 'Login successful', 'sessionID': user.id}), 200
         else:
-            logger.warning(f"User ID is None after login for username: {username}")
             return jsonify({'error': 'User ID is None'}), 500  # Internal Server Error
     else:
-        logger.warning(f"Failed login attempt for username: {username}")
         return jsonify({'error': 'Invalid username or password'}), 401
 
 
