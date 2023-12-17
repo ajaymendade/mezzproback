@@ -152,12 +152,14 @@ def login_required(f):
 def check_auth():
     # Check if the session contains a user_id
     user_id = session.get('user_id')
-    logger.info(f"Entire Session Data: {session}")
     logger.info(f"Session ID set to {session.get('user_id')}")
     logger.info(f"Session User ID: {user_id}")
 
     test_value = session.get('test_key')
     logger.info(f"Test Key Value: {test_value}")
+
+    logger.info(f"Entire Session Data: {session}")
+
 
     if user_id:
         # User is authenticated
