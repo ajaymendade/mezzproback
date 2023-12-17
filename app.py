@@ -254,15 +254,20 @@ def login():
     user = User.query.filter_by(username=username).first()
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
         login_user(user)
-        
-        session['user_id'] = user.id
-        session['username'] = user.username  # Set the username in the session
-        logger.info(f"Login: Session User ID set to {session.get('user_id')}")
-        logger.info(f"User {username} logged in successfully with session ID: {session.get('user_id')}")
-        return jsonify({'message': 'Login successful', 'sessionID': user.id}), 200
+
+        if user.id is not None:
+            session['user_id'] = user.id
+            session['username'] = user.username  # Set the username in the session
+            logger.info(f"Login: Session User ID set to {session.get('user_id')}")
+            logger.info(f"User {username} logged in successfully with session ID: {session.get('user_id')}")
+            return jsonify({'message': 'Login successful', 'sessionID': user.id}), 200
+        else:
+            logger.warning(f"User ID is None after login for username: {username}")
+            return jsonify({'error': 'User ID is None'}), 500  # Internal Server Error
     else:
         logger.warning(f"Failed login attempt for username: {username}")
         return jsonify({'error': 'Invalid username or password'}), 401
+
 
     
 
