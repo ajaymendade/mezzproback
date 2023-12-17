@@ -153,7 +153,7 @@ def check_auth():
     # Check if the session contains a user_id
     user_id = session.get('user_id')
     logger.info(f"Session User ID: {user_id}")
-    print(user_id)
+    
     if user_id:
         # User is authenticated
         logger.info(f"User with session ID {user_id} is authenticated")
