@@ -155,7 +155,10 @@ def check_auth():
     logger.info(f"Entire Session Data: {session}")
     logger.info(f"Session ID set to {session.get('user_id')}")
     logger.info(f"Session User ID: {user_id}")
-    
+
+    test_value = session.get('test_key')
+    logger.info(f"Test Key Value: {test_value}")
+
     if user_id:
         # User is authenticated
         logger.info(f"User with session ID {user_id} is authenticated")
@@ -262,6 +265,9 @@ def login():
             session['username'] = user.username  # Set the username in the session
             logger.info(f"Login: Session User ID set to {session.get('user_id')}")
             logger.info(f"User {username} logged in successfully with session ID: {session.get('user_id')}")
+
+            session['test_key'] = 'test_value'
+
             return jsonify({'message': 'Login successful', 'sessionID': user.id}), 200
         else:
             logger.warning(f"User ID is None after login for username: {username}")
