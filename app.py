@@ -256,12 +256,14 @@ def login():
         login_user(user)
         
         session['user_id'] = user.id
+        session['username'] = user.username  # Set the username in the session
         logger.info(f"Login: Session User ID set to {session.get('user_id')}")
         logger.info(f"User {username} logged in successfully with session ID: {session.get('user_id')}")
         return jsonify({'message': 'Login successful', 'sessionID': user.id}), 200
     else:
         logger.warning(f"Failed login attempt for username: {username}")
         return jsonify({'error': 'Invalid username or password'}), 401
+
     
 
 
