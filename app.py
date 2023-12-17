@@ -147,27 +147,26 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
     
+
 @app.route('/check-auth', methods=['GET'])
 def check_auth():
-    # Check if user_id is in session
+    # Check if the session contains a user_id
     user_id = session.get('user_id')
     logger.info(f"Session User ID: {user_id}")
 
     if user_id:
-        # Fetch user from the database
-        user = User.query.get(user_id)
-        if user:
-            # User is authenticated and found in the database
-            logger.info(f"User {user.username} is authenticated and found in the database")
-            return jsonify({
-                'message': 'Authenticated',
-                'username': user.username,
-                'email': user.email
-            }), 200
-        else:
-            # User ID in session but no corresponding user in the database
-            logger.warning(f"User ID {user_id} found in session but no corresponding user in the database")
-            return jsonify({'error': 'User not found in database'}), 404
+        # User is authenticated
+        logger.info(f"User with session ID {user_id} is authenticated")
+
+        # You can access other session data if needed
+        # Example: username stored in the session
+        username = session.get('username')
+
+        return jsonify({
+            'message': 'Authenticated',
+            'user_id': user_id,
+            'username': username  # Include any other session data you need
+        }), 200
     else:
         # User is not authenticated
         logger.warning("User not authenticated")
