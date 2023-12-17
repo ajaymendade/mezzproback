@@ -148,7 +148,7 @@ def login_required(f):
     return decorated_function
     
 
-@app.route('/check-auth', methods=['GET'])
+@app.route('/check-auth', methods=['POST'])
 def check_auth():
     # Check if the session contains a user_id
     user_id = session.get('user_id')
