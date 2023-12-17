@@ -32,6 +32,7 @@ numpy==1.26.2
 packaging==23.1
 pathy==0.10.2
 preshed==3.0.9
+psycopg2==2.9.9
 pydantic==2.4.1
 pydantic_core==2.10.1
 PyPDF2==3.0.1
