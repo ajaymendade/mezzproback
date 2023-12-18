@@ -248,20 +248,20 @@ def login():
 @app.route('/check-auth', methods=['POST'])
 def check_auth():
     # Load the session data from Redis
-    with app.app_context():
-        user_id = session.get('user_id')
-        logger.info(f"Session User ID: {user_id}")
+    
+    user_id = session.get('user_id')
+    logger.info(f"Session User ID: {user_id}")
 
-        if user_id:
-            username = session.get('username')
+    if user_id:
+        username = session.get('username')
 
-            return jsonify({
-                'message': 'Authenticated',
-                'user_id': user_id,
-                'username': username  # Include any other session data you need
-            }), 200
-        else:
-            return jsonify({'error': 'Not authenticated'}), 401
+        return jsonify({
+            'message': 'Authenticated',
+            'user_id': user_id,
+            'username': username  # Include any other session data you need
+        }), 200
+    else:
+        return jsonify({'error': 'Not authenticated'}), 401
 
     
 
