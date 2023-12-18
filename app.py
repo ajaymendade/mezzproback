@@ -43,7 +43,7 @@ logger.setLevel(logging.INFO)
 
 app = Flask(__name__)
 CORS(app, origins='*', supports_credentials=True)
-app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://mezz_zysd_user:Gt2CHYjha4xmzuSPBfe140arqpHVt2kz@dpg-clvc7c5a73kc73bo8a80-a.oregon-postgres.render.com/mezz_zysd'
+app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://mezz_5d0i_user:QjlbPAYjyfn1tt74chGwJ9lB0Tv0n570@dpg-cm01b0ug1b2c73cl7so0-a.oregon-postgres.render.com/mezz_5d0i'
 load_dotenv()
 app.config['UPLOAD_FOLDER'] = 'pdfs'
 db = SQLAlchemy(app)
