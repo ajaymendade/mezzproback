@@ -50,14 +50,11 @@ db = SQLAlchemy(app)
 app.secret_key = '6de23aa303c89bb1ab31a42a39b419ba3ce26cae8821cfa7c060878c63b827b1'
 
 
-# Direct Redis Configuration for Testing
-# Session configuration for Redis
 app.config["SESSION_TYPE"] = "redis"
-app.config["SESSION_REDIS"] = redis.StrictRedis.from_url("redis://default:cUdRHzOGQLtCKDiiDet49NWADcexDsUW@redis-10190.c1.asia-northeast1-1.gce.cloud.redislabs.com:10190")
-
-
 app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_USE_SIGNER"] = False
+app.config["SESSION_USE_SIGNER"] = True
+app.config["SESSION_REDIS"] = redis.StrictRedis(host='redis-10190.c1.asia-northeast1-1.gce.cloud.redislabs.com', port=10190, password='cUdRHzOGQLtCKDiiDet49NWADcexDsUW', decode_responses=False)
+
 Session(app)
 
 
