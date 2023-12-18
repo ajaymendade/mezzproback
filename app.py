@@ -42,7 +42,7 @@ logger.setLevel(logging.INFO)
 #https://mezz-front.vercel.app
 
 app = Flask(__name__)
-CORS(app, origins='https://mezz-front.vercel.app/', supports_credentials=True)
+CORS(app, origins='https://mezz-front.vercel.app', supports_credentials=True)
 app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://mezz_5d0i_user:QjlbPAYjyfn1tt74chGwJ9lB0Tv0n570@dpg-cm01b0ug1b2c73cl7so0-a.oregon-postgres.render.com/mezz_5d0i'
 load_dotenv()
 app.config['UPLOAD_FOLDER'] = 'pdfs'
