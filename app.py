@@ -259,12 +259,17 @@ def login():
 
             # Add these lines for additional logging
             app.logger.info(f"Session ID before storing: {session.get('user_id')}")
-
             logger.info(f"User {username} logged in successfully with session ID: {session.get('user_id')}")
 
             # Display session data stored in Redis
-            redis_key = f"{app.config['SESSION_KEY_PREFIX']}:sessions:{user.id}"
+            redis_key = f"{app.config['SESSION_KEY_PREFIX']}:sessions:{session.get('user_id')}"
             app.logger.info(f"Attempting to retrieve session data from Redis with key: {redis_key}")
+
+            # Add additional logging for Redis connection details
+            app.logger.info(f"Redis Host: {app.config['SESSION_REDIS'].connection_pool.connection_kwargs['host']}")
+            app.logger.info(f"Redis Port: {app.config['SESSION_REDIS'].connection_pool.connection_kwargs['port']}")
+            app.logger.info(f"Redis Password: {app.config['SESSION_REDIS'].connection_pool.connection_kwargs['password']}")
+
             redis_data = app.config['SESSION_REDIS'].get(redis_key)
             app.logger.info(f"Retrieved session data from Redis: {redis_data}")
 
@@ -273,6 +278,7 @@ def login():
             return jsonify({'error': 'User ID is None'}), 500  # Internal Server Error
     else:
         return jsonify({'error': 'Invalid username or password'}), 401
+
 
 
 
