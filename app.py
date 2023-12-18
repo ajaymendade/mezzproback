@@ -256,17 +256,24 @@ def login():
         if user.id is not None:
             session['user_id'] = user.id
             session['username'] = user.username  # Set the username in the session
+
+            # Add these lines for additional logging
+            app.logger.info(f"Session ID before storing: {session.get('user_id')}")
+
             logger.info(f"User {username} logged in successfully with session ID: {session.get('user_id')}")
 
             # Display session data stored in Redis
-            redis_data = app.config['SESSION_REDIS'].get(f"{app.config['SESSION_KEY_PREFIX']}:{user.id}")
-            logger.info(f"Session data in Redis for user {username}: {redis_data}")
+            redis_key = f"{app.config['SESSION_KEY_PREFIX']}:sessions:{user.id}"
+            app.logger.info(f"Attempting to retrieve session data from Redis with key: {redis_key}")
+            redis_data = app.config['SESSION_REDIS'].get(redis_key)
+            app.logger.info(f"Retrieved session data from Redis: {redis_data}")
 
             return jsonify({'message': 'Login successful', 'sessionID': user.id}), 200
         else:
             return jsonify({'error': 'User ID is None'}), 500  # Internal Server Error
     else:
         return jsonify({'error': 'Invalid username or password'}), 401
+
 
 
     
