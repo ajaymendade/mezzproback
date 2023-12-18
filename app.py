@@ -53,8 +53,13 @@ app.secret_key = '6de23aa303c89bb1ab31a42a39b419ba3ce26cae8821cfa7c060878c63b827
 app.config["SESSION_TYPE"] = "redis"
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_USE_SIGNER"] = True
-app.config["SESSION_REDIS"] = redis.StrictRedis(host='redis-10190.c1.asia-northeast1-1.gce.cloud.redislabs.com', port=10190, password='cUdRHzOGQLtCKDiiDet49NWADcexDsUW', decode_responses=False)
-
+app.config["SESSION_KEY_PREFIX"] = "mezzpro"
+app.config["SESSION_REDIS"] = redis.StrictRedis(
+    host='redis-10190.c1.asia-northeast1-1.gce.cloud.redislabs.com',
+    port=10190,
+    password='cUdRHzOGQLtCKDiiDet49NWADcexDsUW',
+    decode_responses=False
+)
 Session(app)
 
 
@@ -253,6 +258,9 @@ def login():
             session['username'] = user.username  # Set the username in the session
             logger.info(f"User {username} logged in successfully with session ID: {session.get('user_id')}")
 
+            # Display session data stored in Redis
+            redis_data = app.config['SESSION_REDIS'].get(f"{app.config['SESSION_KEY_PREFIX']}:{user.id}")
+            logger.info(f"Session data in Redis for user {username}: {redis_data}")
 
             return jsonify({'message': 'Login successful', 'sessionID': user.id}), 200
         else:
