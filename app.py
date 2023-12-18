@@ -151,25 +151,6 @@ def login_required(f):
             return jsonify({'error': 'Authentication required'}), 401
         return f(*args, **kwargs)
     return decorated_function
-    
-
-@app.route('/check-auth', methods=['POST'])
-def check_auth():
-    # Load the session data from Redis
-    with app.app_context():
-        user_id = session.get('user_id')
-        logger.info(f"Session User ID: {user_id}")
-
-        if user_id:
-            username = session.get('username')
-
-            return jsonify({
-                'message': 'Authenticated',
-                'user_id': user_id,
-                'username': username  # Include any other session data you need
-            }), 200
-        else:
-            return jsonify({'error': 'Not authenticated'}), 401
 
 
 @app.route('/register', methods=['POST'])
@@ -264,7 +245,23 @@ def login():
         return jsonify({'error': 'Invalid username or password'}), 401
 
 
+@app.route('/check-auth', methods=['POST'])
+def check_auth():
+    # Load the session data from Redis
+    with app.app_context():
+        user_id = session.get('user_id')
+        logger.info(f"Session User ID: {user_id}")
 
+        if user_id:
+            username = session.get('username')
+
+            return jsonify({
+                'message': 'Authenticated',
+                'user_id': user_id,
+                'username': username  # Include any other session data you need
+            }), 200
+        else:
+            return jsonify({'error': 'Not authenticated'}), 401
 
     
 
