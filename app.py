@@ -58,7 +58,7 @@ app.config["SESSION_REDIS"] = redis.StrictRedis(
     host='redis-10190.c1.asia-northeast1-1.gce.cloud.redislabs.com',
     port=10190,
     password='cUdRHzOGQLtCKDiiDet49NWADcexDsUW',
-    decode_responses=False
+    decode_responses=True
 )
 Session(app)
 
